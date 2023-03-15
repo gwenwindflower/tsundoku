@@ -10,6 +10,9 @@ const Layout: React.FC<Props> = (props) => (
     <Header />
     <div className="layout">{props.children}</div>
     <style jsx global>{`
+      @import url("https://fonts.googleapis.com/css2?family=Fanwood+Text:ital@0;1&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Fanwood+Text:ital@0;1&family=Source+Code+Pro:wght@200&display=swap");
+
       html {
         box-sizing: border-box;
       }
@@ -24,9 +27,7 @@ const Layout: React.FC<Props> = (props) => (
         margin: 0;
         padding: 0;
         font-size: 16px;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-          "Segoe UI Symbol";
+        font-family: "Fanwood Text";
         background: rgba(0, 0, 0, 0.05);
       }
 
@@ -41,7 +42,7 @@ const Layout: React.FC<Props> = (props) => (
     `}</style>
     <style jsx>{`
       .layout {
-        padding: 0 2rem;
+        padding: 0 4rem;
       }
     `}</style>
   </div>

@@ -14,6 +14,11 @@ const Header: React.FC = () => {
           Feed
         </a>
       </Link>
+      <Link href="/add_book">
+        <a className="bold" data-active={isActive("/add_book")}>
+          Add Book
+        </a>
+      </Link>
       <style jsx>{`
         .bold {
           font-weight: bold;
@@ -23,10 +28,24 @@ const Header: React.FC = () => {
           text-decoration: none;
           color: #000;
           display: inline-block;
+          font-family: "Source Code Pro";
+          border: 1px solid black;
+          padding: 1rem;
+        }
+
+        a:hover {
+          background-color: gray;
+          color: white;
         }
 
         .left a[data-active="true"] {
-          color: gray;
+          background-color: lightgray;
+          color: black;
+        }
+
+        .left a[data-active="true"]:hover {
+          background-color: gray;
+          color: white;
         }
 
         a + a {
@@ -45,7 +64,7 @@ const Header: React.FC = () => {
       <style jsx>{`
         nav {
           display: flex;
-          padding: 2rem;
+          padding: 2rem 4rem;
           align-items: center;
         }
       `}</style>
