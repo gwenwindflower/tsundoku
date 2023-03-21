@@ -11,6 +11,20 @@ export type BookProps = {
   genre: {
     genre: string;
   };
+  user_books: UserBookProps[];
+};
+
+export type UserBookProps = {
+  id: string;
+  book_id: string;
+  user_id: string;
+  status: string;
+  user: User;
+};
+
+export type User = {
+  id: string;
+  email: string;
 };
 
 const Book: React.FC<{ book: BookProps }> = ({ book }) => {

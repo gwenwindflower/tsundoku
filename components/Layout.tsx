@@ -1,3 +1,4 @@
+import { GetServerSideProps } from "next";
 import React, { ReactNode } from "react";
 import Header from "./Header";
 

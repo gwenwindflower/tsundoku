@@ -1,7 +1,8 @@
 import React from "react";
 import { GetStaticProps } from "next";
 import Layout from "../components/Layout";
-import Book, { BookProps } from "../components/Book";
+import { BookProps } from "../components/Book";
+import BookListing from "../components/BookListing";
 import prisma from "../lib/prisma";
 
 export const getStaticProps: GetStaticProps = async () => {
@@ -13,8 +14,19 @@ export const getStaticProps: GetStaticProps = async () => {
           first_name: true,
         },
       },
+      user_books: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              email: true,
+            },
+          },
+        },
+      },
     },
   });
+
   return {
     props: { feed },
     revalidate: 10,
@@ -23,6 +35,10 @@ export const getStaticProps: GetStaticProps = async () => {
 
 type Props = {
   feed: BookProps[];
+  userBooks: {
+    book: BookProps;
+    status: string;
+  };
 };
 
 const Books: React.FC<Props> = (props) => {
@@ -33,7 +49,7 @@ const Books: React.FC<Props> = (props) => {
         <main>
           {props.feed.map((book) => (
             <div key={book.id} className="book">
-              <Book book={book} />
+              <BookListing book={book} />
             </div>
           ))}
         </main>

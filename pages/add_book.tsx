@@ -2,13 +2,46 @@ import React, { useState } from "react";
 import Layout from "../components/Layout";
 import prisma from "../lib/prisma";
 import Router from "next/router";
+import { GetStaticProps } from "next";
+import { BookProps } from "../components/Book";
 
-const AddBook: React.FC = () => {
+export const getStaticProps: GetStaticProps = async () => {
+  const books = await prisma.book.findMany({
+    include: {
+      author: {
+        select: {
+          last_name: true,
+          first_name: true,
+        },
+      },
+      genre: {
+        select: {
+          genre: true,
+        },
+      },
+    },
+  });
+
+  const uniqueGenres = new Set();
+  books.forEach((book) => uniqueGenres.add(book.genre.genre));
+  const genres = Array.from(uniqueGenres);
+
+  return {
+    props: { books, genres },
+    revalidate: 10,
+  };
+};
+
+type Props = {
+  books: BookProps[];
+  genres: string[];
+};
+
+const AddBook: React.FC<Props> = (props) => {
   const [title, setTitle] = useState("");
   const [authorLastName, setAuthorLastName] = useState("");
   const [authorFirstName, setAuthorFirstName] = useState("");
   const [genreName, setGenreName] = useState("");
-
   const submitData = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     try {
@@ -53,13 +86,28 @@ const AddBook: React.FC = () => {
           value={authorFirstName}
         />
         <label htmlFor="genre">Genre</label>
-        <input
+        {/* make inputs a component */}
+        {/* ideally suggest existing an options to fill */}
+        {/* make select dropdown for genre */}
+        {/* <input
           required
           onChange={(e) => setGenreName(e.target.value)}
           placeholder="Genre"
-          type="text"
+          type=""
           value={genreName}
-        />
+        /> */}
+        <select
+          required
+          name="genre"
+          id="genre"
+          onChange={(e) => setGenreName(e.target.value)}
+        >
+          {props.genres.map((genre) => (
+            <option key={genre} value={genre}>
+              {genre}
+            </option>
+          ))}
+        </select>
         <input
           type="submit"
           disabled={!title || !authorLastName || !authorFirstName || !genreName}
