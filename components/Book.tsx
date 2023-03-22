@@ -20,6 +20,10 @@ export type UserBookProps = {
   user_id: string;
   status: string;
   user: User;
+  review: {
+    rating: number;
+    notes: string;
+  };
 };
 
 export type User = {
