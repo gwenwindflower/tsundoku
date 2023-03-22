@@ -2,6 +2,30 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
+import useSWR from "swr";
+
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
+
+const ProfileLink = () => {
+  const { data: session, status } = useSession();
+  const userEmail = session.user.email;
+  const { data, error } = useSWR(`/api/user/${userEmail}`, fetcher);
+  if (data) {
+    return (
+      <Link legacyBehavior href={`/user/${data.id}`}>
+        <a>
+          {data.name} [{data.email}]
+        </a>
+      </Link>
+    );
+  } else {
+    return (
+      <Link legacyBehavior href={`/`}>
+        <a>Loading... [Loading...]</a>
+      </Link>
+    );
+  }
+};
 
 const Header: React.FC = () => {
   const router = useRouter();
@@ -14,12 +38,7 @@ const Header: React.FC = () => {
     <div className="left">
       <Link href="/" legacyBehavior>
         <a className="bold" data-active={isActive("/")}>
-          Feed
-        </a>
-      </Link>
-      <Link href="/add_book" legacyBehavior>
-        <a className="bold" data-active={isActive("/add_book")}>
-          Add Book
+          Books
         </a>
       </Link>
       <style jsx>{`
@@ -90,17 +109,9 @@ const Header: React.FC = () => {
   }
 
   if (session) {
-    const user = () => {
-      return fetch(`/api/user/${session?.user.email}`);
-    };
     right = (
       <div className="right">
-        <p>
-          {session.user.name} ({session.user.email})
-        </p>
-        <Link legacyBehavior href={`/user/${encodeURIComponent(user.name)}`}>
-          <a>Link to profile</a>
-        </Link>
+        <ProfileLink />
         <Link legacyBehavior href="/add_book">
           <button>
             <a>Add new book</a>

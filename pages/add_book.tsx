@@ -115,12 +115,13 @@ const AddBook: React.FC<Props> = (props) => {
         />
       </form>
       <style jsx>{`
-        label {
-          margin-left: 1rem;
-          font-weight: bold;
-        }
         input {
-          margin-left: 0.5rem;
+          display: block;
+          margin-top: 1rem;
+        }
+        select {
+          display: block;
+          margin-top: 1rem;
         }
       `}</style>
     </Layout>
