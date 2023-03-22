@@ -28,6 +28,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       },
       user_books: {
         select: {
+          id: true,
           user_id: true,
           status: true,
           review: {
@@ -47,57 +48,78 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-const ReviewForm = (book, session) => {
+type ReviewFormProps = {
+  book: BookProps;
+  userEmail: string;
+};
+
+const ReviewForm: React.FC<ReviewFormProps> = (props) => {
   // get user
-  console.log(session);
-  const userEmail = session.user.email;
-  const { data, error } = useSWR(`/api/user/${userEmail}`, fetcher);
-  console.log(data);
-  // const userId = data.id;
+  const { data, error } = useSWR(`/api/user/${props.userEmail}`, fetcher);
+  // when user is fetched, get the user book for this book that is associated with them
   const [rating, setRating] = useState("");
   const [notes, setNotes] = useState("");
-  const submitReview = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    try {
-      const body = { userBookId, rating, notes };
-      await fetch("/api/review", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      await Router.push(`/book/${book.id}`);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  return (
-    <form onSubmit={submitReview}>
-      <label htmlFor="rating">Rating</label>
-      <input
-        autoFocus
-        required
-        min="1"
-        max="5"
-        onChange={(e) => setRating(e.target.value)}
-        placeholder="Rating"
-        type="number"
-        value={rating}
-      />
-      <label htmlFor="notes">Notes</label>
-      <input
-        onChange={(e) => setNotes(e.target.value)}
-        placeholder="Notes"
-        type="textarea"
-        value={notes}
-      />
-      <input type="submit" value="Add Review" />
-    </form>
-  );
+
+  if (data) {
+    const userBook = props.book.user_books.find((user_book) => {
+      return user_book.user_id === data.id;
+    });
+    const userBookId = userBook.id;
+
+    const submitReview = async (e: React.SyntheticEvent) => {
+      e.preventDefault();
+      try {
+        const body = { userBookId, rating, notes };
+        await fetch("/api/review", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        await Router.push(`/book/${props.book.id}`);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    return (
+      <div>
+        {userBook.review ? (
+          <div>
+            <p>Your rating: {userBook.review.rating}</p>
+            <p>Your notes: {userBook.review.notes}</p>
+          </div>
+        ) : (
+          ""
+        )}
+        <form onSubmit={submitReview}>
+          <label htmlFor="rating">Rating</label>
+          <input
+            autoFocus
+            required
+            min="1"
+            max="5"
+            onChange={(e) => setRating(e.target.value)}
+            placeholder="Rating"
+            type="number"
+            value={rating}
+          />
+          <label htmlFor="notes">Notes</label>
+          <input
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Notes"
+            type="textarea"
+            value={notes}
+          />
+          <input type="submit" value="Add Review" />
+        </form>
+      </div>
+    );
+  } else {
+    return <p>Loading...</p>;
+  }
 };
 
 const Book: React.FC<BookProps> = (book) => {
   const { data: session, status } = useSession();
-  console.log(session);
   return (
     <Layout>
       <div>
@@ -111,7 +133,11 @@ const Book: React.FC<BookProps> = (book) => {
             <li>{user_book.review?.rating}</li>;
           })}
         </ul>
-        {session ? <ReviewForm book={book} session={session} /> : "Loading..."}
+        {session ? (
+          <ReviewForm book={book} userEmail={session.user.email} />
+        ) : (
+          "Loading..."
+        )}
       </div>
       <style jsx>{`
         .page {
