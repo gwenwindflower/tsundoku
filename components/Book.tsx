@@ -36,7 +36,6 @@ const Book: React.FC<{ book: BookProps }> = ({ book }) => {
       </h3>
       <style jsx>{`
         div {
-          color: inherit;
           padding: 2rem;
         }
       `}</style>

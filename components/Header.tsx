@@ -29,9 +29,7 @@ const Header: React.FC = () => {
 
         a {
           text-decoration: none;
-          color: #000;
           display: inline-block;
-          font-family: "Source Code Pro";
           border: 1px solid black;
           padding: 1rem;
         }
@@ -136,10 +134,6 @@ const Header: React.FC = () => {
             border: 1px solid var(--geist-foreground);
             padding: 0.5rem 1rem;
             border-radius: 3px;
-          }
-
-          button {
-            border: none;
           }
         `}</style>
       </div>

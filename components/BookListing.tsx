@@ -74,6 +74,11 @@ const BookListing: React.FC<{ book: BookProps }> = ({ book }) => {
     <div>
       <Book book={book} />
       {CollectButtons}
+      <style jsx>{`
+        div {
+          background: lavender;
+        }
+      `}</style>
     </div>
   );
 };
