@@ -1,5 +1,6 @@
 import React from "react";
 import Router from "next/router";
+import { UserBookProps } from "./UserBookListItem";
 
 export type BookProps = {
   id: string;
@@ -12,19 +13,6 @@ export type BookProps = {
     genre: string;
   };
   user_books: UserBookProps[];
-};
-
-export type UserBookProps = {
-  id: string;
-  book_id: string;
-  user_id: string;
-  status: string;
-  user: User;
-};
-
-export type User = {
-  id: string;
-  email: string;
 };
 
 const Book: React.FC<{ book: BookProps }> = ({ book }) => {

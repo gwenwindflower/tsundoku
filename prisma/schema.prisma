@@ -21,12 +21,13 @@ model Book {
 }
 
 model UserBook {
-  id      String @id @default(cuid())
-  book    Book   @relation(fields: [book_id], references: [id])
+  id      String  @id @default(cuid())
+  book    Book    @relation(fields: [book_id], references: [id])
   book_id String
-  user    User   @relation(fields: [user_id], references: [id])
+  user    User    @relation(fields: [user_id], references: [id])
   user_id String
   status  String
+  review  Review?
 }
 
 model Author {
@@ -42,6 +43,14 @@ model Genre {
   id    String @id @default(cuid())
   genre String @unique
   books Book[]
+}
+
+model Review {
+  id           String   @id @default(cuid())
+  user_book    UserBook @relation(fields: [user_book_id], references: [id])
+  user_book_id String   @unique
+  rating       Int
+  notes        String?
 }
 
 model Account {
@@ -79,7 +88,7 @@ model User {
   email         String?    @unique
   emailVerified DateTime?
   image         String?
-  books         UserBook[]
+  user_books    UserBook[]
   accounts      Account[]
   sessions      Session[]
 }

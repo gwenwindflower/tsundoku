@@ -5,6 +5,11 @@ import Router from "next/router";
 import { GetStaticProps } from "next";
 import { BookProps } from "../components/Book";
 
+type Props = {
+  books: BookProps[];
+  genres: string[];
+};
+
 export const getStaticProps: GetStaticProps = async () => {
   const books = await prisma.book.findMany({
     include: {
@@ -30,11 +35,6 @@ export const getStaticProps: GetStaticProps = async () => {
     props: { books, genres },
     revalidate: 10,
   };
-};
-
-type Props = {
-  books: BookProps[];
-  genres: string[];
 };
 
 const AddBook: React.FC<Props> = (props) => {
