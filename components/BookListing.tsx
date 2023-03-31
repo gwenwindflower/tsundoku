@@ -6,14 +6,11 @@ import Router from "next/router";
 const BookListing: React.FC<{ book: BookProps }> = ({ book }) => {
   const { data: session, status } = useSession();
 
-  const [saving, setSaving] = React.useState(false);
-
   const collectBook = async (
     book: BookProps,
     email: string,
     status: string
   ) => {
-    // setSaving(true);
     const userBookIds = {
       book_id: book.id,
       user_email: email,
@@ -32,7 +29,6 @@ const BookListing: React.FC<{ book: BookProps }> = ({ book }) => {
   };
 
   const unCollectBook = async (id: string) => {
-    // setSaving(true);
     await fetch(`/api/collect/${id}`, {
       method: "DELETE",
     });

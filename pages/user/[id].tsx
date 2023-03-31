@@ -4,6 +4,17 @@ import Layout from "../../components/Layout";
 import prisma from "../../lib/prisma";
 import UserBookListItem from "../../components/UserBookListItem";
 
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  user_books: any;
+};
+
+type Props = {
+  user: User;
+};
+
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const user = await prisma.user.findUnique({
     where: {
@@ -37,17 +48,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       user: user,
     },
   };
-};
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  user_books: any;
-};
-
-type Props = {
-  user: User;
 };
 
 const UserPage: React.FC<Props> = (props) => {
